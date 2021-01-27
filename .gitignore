@@ -3,3 +3,5 @@
 ################################################################################
 
 /daniil/.vs/daniil/DesignTimeBuild
+/daniil/daniil/bin/x64
+/daniil/daniil/obj/x64/Debug/netcoreapp3.1
