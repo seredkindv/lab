@@ -31,13 +31,14 @@ namespace daniil
                 "[*имя рисунка*]",///1
                 "[*ссылка на следующий рисунок*]",///2
                 "[*ссылка на предыдущий рисунок*]",///3
-                "fsdf[*ссылка на таблицу*]",///4
+                "[*ссылка на таблицу*]",///4
                 "[*таблица первая*]"///5
                 };
             var application = new Application();
             application.Visible = true;
             var document = application.Documents.Open(sourcePath, false);
             Paragraph prevParagraph = null;
+            Object missing = System.Type.Missing;
 
             foreach (Paragraph paragraph in document.Paragraphs)
             {
@@ -55,6 +56,13 @@ namespace daniil
                                     paragraph.Format.SpaceAfter = 12;
                                     paragraph.Range.Font.Bold = 1;
                                     paragraph.Range.HighlightColorIndex = 0;
+
+                                    _sectionNumber++;
+                                    string replaceString = _sectionNumber.ToString();
+                                    paragraph.Range.Find.Execute(templateStringList[i],
+                                  ref missing, ref missing, ref missing, ref missing, ref missing, ref missing,
+                                   0, ref missing, replaceString, 2, ref missing, ref missing,
+                                  ref missing, ref missing);
                                 }
                                 break;
                             case 1:
@@ -70,21 +78,45 @@ namespace daniil
                                         prevParagraph.Format.SpaceBefore = 12;
                                         prevParagraph.Alignment = WdParagraphAlignment.wdAlignParagraphCenter;
                                     }
+
+                                    _pictureNumber++;
+                                    string replaceString = "Рисунок " + _sectionNumber.ToString() + "." + _pictureNumber.ToString() + " -";
+
+                                    paragraph.Range.Find.Execute(templateStringList[i],
+                                   ref missing, ref missing, ref missing, ref missing, ref missing, ref missing,
+                                    0, ref missing, replaceString, 2, ref missing, ref missing,
+                                   ref missing, ref missing);
                                 }
                                 break;
                             case 2:
                                 {
+                                    string replaceString = _sectionNumber.ToString() + "." + (_pictureNumber + 1).ToString();
 
+                                    paragraph.Range.Find.Execute(templateStringList[i],
+                                   ref missing, ref missing, ref missing, ref missing, ref missing, ref missing,
+                                    0, ref missing, replaceString, 2, ref missing, ref missing,
+                                   ref missing, ref missing);
                                 }
                                 break;
                             case 3:
                                 {
+                                    string replaceString = _sectionNumber.ToString() + "." + _pictureNumber.ToString();
 
+                                    paragraph.Range.Find.Execute(templateStringList[i],
+                                   ref missing, ref missing, ref missing, ref missing, ref missing, ref missing,
+                                    0, ref missing, replaceString, 2, ref missing, ref missing,
+                                   ref missing, ref missing);
                                 }
                                 break;
                             case 4:
                                 {
+                                    _tableNumber++;
+                                    string replaceString = _sectionNumber.ToString() + "." + _tableNumber.ToString();
 
+                                    paragraph.Range.Find.Execute(templateStringList[i],
+                                   ref missing, ref missing, ref missing, ref missing, ref missing, ref missing,
+                                    0, ref missing, replaceString, 2, ref missing, ref missing,
+                                   ref missing, ref missing);
                                 }
                                 break;
                             case 5:
@@ -98,6 +130,7 @@ namespace daniil
                 }
                 prevParagraph = paragraph;
             }
+
 
             document.SaveAs2(distPath);
             System.Console.In.Read();
