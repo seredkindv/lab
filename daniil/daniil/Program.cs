@@ -31,7 +31,8 @@ namespace daniil
                 "[*ссылка на следующий рисунок*]",///2
                 "[*ссылка на предыдущий рисунок*]",///3
                 "[*ссылка на таблицу*]",///4
-                "[*таблица первая*]"///5
+                "[*таблица первая*]",///5,
+                "[*код*]"///6
                 };
             var application = new Application();
             application.Visible = true;
@@ -146,17 +147,41 @@ namespace daniil
                                     }
                                 }
                                 break;
-
+                            case 6: {
+                                    insertCode(application, paragraph, templateStringList[i]);
+                                }
+                                break;
                         }
                     }
+                    prevParagraph = paragraph;
                 }
-                prevParagraph = paragraph;
+
+
+                document.SaveAs2(distPath);
+                System.Console.In.Read();
+                // application.Quit();
             }
+        }
 
 
-            document.SaveAs2(distPath);
-            System.Console.In.Read();
-            // application.Quit();
+        public static void insertCode(Application application, Paragraph paragraph, string template)
+        {
+            string code = @"C:\Users\vdser\Desktop\Program.cs";
+            application.Selection.Find.Execute(template);
+            var range = application.Selection.Range;
+            range.HighlightColorIndex = 0;
+            /**
+             * Рисуем граница вокруг листинга
+             */
+            paragraph.Range.Borders.OutsideLineStyle = WdLineStyle.wdLineStyleSingle;
+            paragraph.Range.Borders.OutsideLineWidth = WdLineWidth.wdLineWidth050pt;
+            range.Borders.OutsideColorIndex = WdColorIndex.wdBlack;
+
+            var font = application.Selection.Font;
+            font.Name = "Calibri";
+            paragraph.Range.Font.Size = 8;
+
+            range.Text = System.IO.File.ReadAllText(code);
         }
     }
 }
